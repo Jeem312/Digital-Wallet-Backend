@@ -1,5 +1,5 @@
 import { Schema, model } from "mongoose";
-import { IUser, Role, AccountStatus, AgentApproval } from "./user.interface";
+import { IUser, Role, AccountStatus } from "./user.interface";
 
 const userSchema = new Schema<IUser>(
   {
@@ -13,7 +13,7 @@ const userSchema = new Schema<IUser>(
     status: { type: String, enum: Object.values(AccountStatus), default: AccountStatus.ACTIVE },
     isVerified: { type: Boolean, default: false },
     isDeleted: { type: Boolean, default: false },
-    agentApproval: { type: String, enum: Object.values(AgentApproval), default: AgentApproval.APPROVED },
+   
     wallet: { type: Schema.Types.ObjectId, ref: "Wallet" },
   },
   { timestamps: true }

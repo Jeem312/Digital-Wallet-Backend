@@ -4,6 +4,7 @@ export enum Role {
   USER = "user",
   AGENT = "agent",
   ADMIN = "admin",
+  PENDING = "pending", 
 }
 
 export enum AccountStatus {
@@ -15,10 +16,7 @@ export enum isActive {
   INACTIVE = "inactive",
   BLOCKED = "blocked",
 }
-export enum AgentApproval {
-  PENDING = "pending",
-  APPROVED = "approved",
-}
+
 
 export interface IUser {
   _id?: Types.ObjectId;
@@ -33,7 +31,7 @@ export interface IUser {
   isActive: isActive;
   isVerified: boolean;
   isDeleted: boolean;
-  agentApproval?: AgentApproval; 
+ 
   wallet?: Types.ObjectId; 
   createdAt?: Date;
   updatedAt?: Date;

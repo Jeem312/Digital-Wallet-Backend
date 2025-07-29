@@ -10,7 +10,7 @@ export class QueryBuilder<T> {
     filter():any{
         const filter = { ...this.query };
 
-        const filterableFields = ["searchTerm", "sort", "fields", "page", "limit"];
+        const filterableFields = ["role","searchTerm", "sort", "fields", "page", "limit"];
 for (const field of filterableFields) {
     delete filter[field];
 }

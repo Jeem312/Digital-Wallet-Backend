@@ -1,10 +1,11 @@
 import AppError from "../../../helpers/AppError";
-import { AgentApproval, IUser, Role, AccountStatus } from "./user.interface";
+import {  IUser, Role, AccountStatus } from "./user.interface";
 import httpStatus from "http-status-codes";
 import { User } from "./user.model";
 import bcrypt from "bcryptjs";
 import { envVars } from "../../../config/envConfig";
 import { Wallet } from "../wallet/wallet.model";
+import { QueryBuilder } from "../../../utils/QueryBuilder";
 
 const createNewUser = async (payload: Partial<IUser> )=>{
 
@@ -30,7 +31,7 @@ const {email , password , ...rest} = payload;
         isDeleted: false,
     };
     if (payload.role === Role.AGENT) {
-        userData.agentApproval = AgentApproval.PENDING;
+        userData.role = Role.PENDING; 
     }
     const user = await User.create(userData);
 
@@ -48,8 +49,24 @@ const {email , password , ...rest} = payload;
     return user;
 }
 
+const getAllUsers = async () => {
+  const users = await User.find();
+  return users;
+};
+
+
+const getSingleUser = async (userId: string) => {
+  const user = await User.findById(userId)
+  if (!user) {
+    throw new AppError(httpStatus.NOT_FOUND, "User not found");
+  }
+  return user;
+};
+
 
 
 export const UserService = {
-    createNewUser
+    createNewUser,
+    getAllUsers,
+    getSingleUser
 }

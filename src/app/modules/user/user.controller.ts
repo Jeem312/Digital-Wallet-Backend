@@ -16,6 +16,30 @@ const createNewUser = catchAsync(async (req,res)=>{
     })
 })
 
+const getAllUsers = catchAsync(async (req, res) => {
+  
+  const users = await UserService.getAllUsers();
+  SendResponse(res, {
+    statusCode: 200,
+    success: true,
+    message: "Users fetched successfully",
+    data: users,
+  });
+});
+
+const getSingleUser = catchAsync(async (req, res) => {
+  const { id } = req.params;
+  const user = await UserService.getSingleUser(id);
+  SendResponse(res, {
+    statusCode: 200,
+    success: true,
+    message: "User fetched successfully",
+    data: user,
+  });
+});
+
 export const userController = {
-    createNewUser
+    createNewUser,
+    getAllUsers,
+    getSingleUser
 }
