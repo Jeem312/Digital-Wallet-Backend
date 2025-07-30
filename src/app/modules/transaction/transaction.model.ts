@@ -15,7 +15,12 @@ const transactionSchema = new Schema<ITransaction>(
     agent: {
       type: Schema.Types.ObjectId,
       ref: "User",
-      required: true,
+      required: false,
+    },
+    receiver: {
+      type: Schema.Types.ObjectId,
+      ref: "User",
+      required: false,   
     },
     type: {
       type: String,
@@ -25,6 +30,7 @@ const transactionSchema = new Schema<ITransaction>(
     charge: {
       type: Number,
       required: true,
+      default: 0         
     },
     status: {
       type: String,

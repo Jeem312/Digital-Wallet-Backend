@@ -56,6 +56,24 @@ const cashOut = catchAsync(async (req: Request, res: Response) => {
 });
 
 
+const sendMoney = catchAsync(async (req: Request, res: Response) => {
+  const { senderId, receiverId } = req.query as { senderId: string; receiverId: string };
+  const { amount } = req.body;
+// console.log("Sender ID:", senderId, "Receiver ID:", receiverId, "Amount:", amount);
+  const result = await WalletService.sendMoney(senderId, receiverId, amount);
+
+  SendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: result.message,
+    data: {
+      senderBalance: result.senderBalance,
+      receiverBalance: result.receiverBalance,
+    },
+  });
+});
+
+
 const blockWallet = catchAsync(async (req: Request, res: Response) => {
   const walletId = req.params.walletId;
   const { isBlocked } = req.body; 
@@ -72,5 +90,6 @@ export const walletController = {
     getWalletByUserId,
     cashIn,
     cashOut,
+    sendMoney,
     blockWallet
 };
