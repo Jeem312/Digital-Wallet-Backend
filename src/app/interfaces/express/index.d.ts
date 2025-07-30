@@ -4,6 +4,7 @@ import { JwtPayload } from "jsonwebtoken";
     namespace Express {
         interface Request {
             user? : JwtPayload
+            email?: JwtPayload
         }
     }
 

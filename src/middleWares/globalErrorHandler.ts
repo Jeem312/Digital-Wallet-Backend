@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
+/* eslint-disable no-console */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { Request, Response, NextFunction } from "express";
 import { envVars } from "../config/envConfig"
@@ -68,6 +70,6 @@ else if (err instanceof Error) {
     message,
     errorSource,
     error: err,
-    stack: envConfig.NODE_ENV === "development" ? err.stack : undefined
+    stack: envVars.NODE_ENV === "development" ? err.stack : undefined
   });
 }
