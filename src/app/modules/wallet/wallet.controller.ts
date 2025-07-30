@@ -2,13 +2,13 @@ import { Request, Response } from "express";
 import { catchAsync } from "../../../utils/catchAsync";
 import { SendResponse } from "../../../utils/sendResponse";
 import { WalletService } from "./wallet.service";
-
+import httpStatus from "http-status-codes";
 const getAllWallets = catchAsync(async (req:Request, res:Response) => {
 
 const wallets = await WalletService.getAllWallets();
 
     SendResponse(res,{
-        statusCode: 200,
+        statusCode: httpStatus.OK,
         success: true,
         message: "All wallets retrieved successfully",
         data: wallets
@@ -20,24 +20,42 @@ const getWalletByUserId = catchAsync(async (req: Request, res: Response) => {
   const userId = req.params.userId.trim();
   const wallet = await WalletService.getWalletByUserId(userId);
   SendResponse(res, {
-    statusCode: 200,
+    statusCode: httpStatus.OK,
     success: true,
     message: "User wallet fetched successfully",
     data: wallet
   });
 });
 
-const updateWalletBalance = catchAsync(async (req: Request, res: Response) => {
-  const userId = req.params.userId;
-  const { amount } = req.body; 
-  const updatedWallet = await WalletService.updateWalletBalance(userId, amount);
+const cashIn = catchAsync(async (req: Request, res: Response) => {
+  const { userId, agentId } = req.query as { userId: string; agentId: string };
+  const { amount } = req.body;
+
+  const result = await WalletService.cashIn(userId, agentId, amount);
+
   SendResponse(res, {
-    statusCode: 200,
+    statusCode: httpStatus.OK,
     success: true,
-    message: "Wallet balance updated successfully",
-    data: updatedWallet
+    message: "Cash-in successful",
+    data: result,
   });
 });
+
+const cashOut = catchAsync(async (req: Request, res: Response) => {
+  const { userId, agentId } = req.query as { userId: string; agentId: string };
+  const { amount } = req.body;
+
+  const result = await WalletService.cashOut(userId, agentId, amount);
+
+  SendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: "Cash-out successful",
+    data: result,
+  });
+});
+
+
 const blockWallet = catchAsync(async (req: Request, res: Response) => {
   const walletId = req.params.walletId;
   const { isBlocked } = req.body; 
@@ -52,6 +70,7 @@ const blockWallet = catchAsync(async (req: Request, res: Response) => {
 export const walletController = {
     getAllWallets,
     getWalletByUserId,
-    updateWalletBalance,
+    cashIn,
+    cashOut,
     blockWallet
 };
