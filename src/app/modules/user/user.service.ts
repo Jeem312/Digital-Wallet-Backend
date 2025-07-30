@@ -5,7 +5,6 @@ import { User } from "./user.model";
 import bcrypt from "bcryptjs";
 import { envVars } from "../../../config/envConfig";
 import { Wallet } from "../wallet/wallet.model";
-import { QueryBuilder } from "../../../utils/QueryBuilder";
 
 const createNewUser = async (payload: Partial<IUser> )=>{
 
@@ -64,9 +63,47 @@ const getSingleUser = async (userId: string) => {
 };
 
 
+const updateUser = async (userId: string, updateData: Partial<IUser>) => {
+
+  if ("role" in updateData) {
+    delete updateData.role;  
+  }
+
+  const updatedUser = await User.findByIdAndUpdate(userId, updateData, {
+    new: true,
+    runValidators: true,
+  });
+
+  if (!updatedUser) {
+    throw new AppError(httpStatus.NOT_FOUND, "User not found");
+  }
+  return updatedUser;
+};
+
+const updateUserRole = async (userId: string, newRole: Role) => {
+  
+  if (!Object.values(Role).includes(newRole)) {
+    throw new AppError(httpStatus.BAD_REQUEST, "Invalid role");
+  }
+
+  const updatedUser = await User.findByIdAndUpdate(
+    userId,
+    { role: newRole },
+    { new: true, runValidators: true }
+  );
+
+  if (!updatedUser) {
+    throw new AppError(httpStatus.NOT_FOUND, "User not found");
+  }
+
+
+  return updatedUser;
+};
 
 export const UserService = {
     createNewUser,
     getAllUsers,
-    getSingleUser
+    getSingleUser,
+    updateUser,
+    updateUserRole
 }
