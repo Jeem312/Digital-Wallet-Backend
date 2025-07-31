@@ -17,6 +17,10 @@ export enum isActive {
   BLOCKED = "blocked",
 }
 
+export enum AgentApprovalStatus {
+  ACCEPTED = "accepted",
+  REJECTED = "rejected",
+}
 
 export interface IUser {
   _id?: Types.ObjectId;

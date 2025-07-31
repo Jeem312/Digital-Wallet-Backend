@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.isActive = exports.AccountStatus = exports.Role = void 0;
+exports.AgentApprovalStatus = exports.isActive = exports.AccountStatus = exports.Role = void 0;
 var Role;
 (function (Role) {
     Role["USER"] = "user";
@@ -19,3 +19,8 @@ var isActive;
     isActive["INACTIVE"] = "inactive";
     isActive["BLOCKED"] = "blocked";
 })(isActive || (exports.isActive = isActive = {}));
+var AgentApprovalStatus;
+(function (AgentApprovalStatus) {
+    AgentApprovalStatus["ACCEPTED"] = "accepted";
+    AgentApprovalStatus["REJECTED"] = "rejected";
+})(AgentApprovalStatus || (exports.AgentApprovalStatus = AgentApprovalStatus = {}));

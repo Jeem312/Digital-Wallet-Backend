@@ -24,13 +24,14 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.UserService = void 0;
-const AppError_1 = __importDefault(require("../../../helpers/AppError"));
+const AppError_1 = __importDefault(require("../../../../dist/helpers/AppError"));
 const user_interface_1 = require("./user.interface");
 const http_status_codes_1 = __importDefault(require("http-status-codes"));
 const user_model_1 = require("./user.model");
 const bcryptjs_1 = __importDefault(require("bcryptjs"));
-const envConfig_1 = require("../../../config/envConfig");
-const wallet_model_1 = require("../wallet/wallet.model");
+const envConfig_1 = require("../../../../dist/config/envConfig");
+const wallet_model_1 = require("../../../../dist/app/modules/wallet/wallet.model");
+const QueryBuilder_1 = require("../../../../dist/utils/QueryBuilder");
 const createNewUser = (payload) => __awaiter(void 0, void 0, void 0, function* () {
     const { email, password } = payload, rest = __rest(payload, ["email", "password"]);
     const isUserExists = yield user_model_1.User.findOne({
@@ -54,9 +55,15 @@ const createNewUser = (payload) => __awaiter(void 0, void 0, void 0, function* (
     yield user.save();
     return user;
 });
-const getAllUsers = () => __awaiter(void 0, void 0, void 0, function* () {
-    const users = yield user_model_1.User.find();
-    return users;
+const getAllUsers = (query) => __awaiter(void 0, void 0, void 0, function* () {
+    const queryBuilder = new QueryBuilder_1.QueryBuilder(user_model_1.User.find(), query)
+        .filter()
+        .search(["email", "name"])
+        .sort()
+        .paginate();
+    const data = yield queryBuilder.build();
+    const meta = yield queryBuilder.getMeta();
+    return { data, meta };
 });
 const getSingleUser = (userId) => __awaiter(void 0, void 0, void 0, function* () {
     const user = yield user_model_1.User.findById(userId);
@@ -88,10 +95,39 @@ const updateUserRole = (userId, newRole) => __awaiter(void 0, void 0, void 0, fu
     }
     return updatedUser;
 });
+const updateAccountStatus = (id, status) => __awaiter(void 0, void 0, void 0, function* () {
+    if (!Object.values(user_interface_1.AccountStatus).includes(status)) {
+        throw new AppError_1.default(http_status_codes_1.default.BAD_REQUEST, "Invalid account status");
+    }
+    const updatedUser = yield user_model_1.User.findByIdAndUpdate(id, { status }, { new: true });
+    if (!updatedUser) {
+        throw new AppError_1.default(http_status_codes_1.default.NOT_FOUND, "User not found");
+    }
+    return updatedUser;
+});
+const updateAgentApprovalStatus = (userId, approvalStatus) => __awaiter(void 0, void 0, void 0, function* () {
+    if (!Object.values(user_interface_1.AgentApprovalStatus).includes(approvalStatus)) {
+        throw new AppError_1.default(http_status_codes_1.default.BAD_REQUEST, "Invalid approval status");
+    }
+    let newRole = user_interface_1.Role.USER;
+    if (approvalStatus === user_interface_1.AgentApprovalStatus.ACCEPTED) {
+        newRole = user_interface_1.Role.AGENT;
+    }
+    const updatedUser = yield user_model_1.User.findByIdAndUpdate(userId, {
+        agentApproval: approvalStatus,
+        role: newRole,
+    }, { new: true });
+    if (!updatedUser) {
+        throw new AppError_1.default(http_status_codes_1.default.NOT_FOUND, "User not found");
+    }
+    return updatedUser;
+});
 exports.UserService = {
     createNewUser,
     getAllUsers,
     getSingleUser,
     updateUser,
-    updateUserRole
+    updateUserRole,
+    updateAccountStatus,
+    updateAgentApprovalStatus
 };

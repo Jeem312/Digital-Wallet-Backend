@@ -95,10 +95,39 @@ const updateUserRole = (userId, newRole) => __awaiter(void 0, void 0, void 0, fu
     }
     return updatedUser;
 });
+const updateAccountStatus = (id, status) => __awaiter(void 0, void 0, void 0, function* () {
+    if (!Object.values(user_interface_1.AccountStatus).includes(status)) {
+        throw new AppError_1.default(http_status_codes_1.default.BAD_REQUEST, "Invalid account status");
+    }
+    const updatedUser = yield user_model_1.User.findByIdAndUpdate(id, { status }, { new: true });
+    if (!updatedUser) {
+        throw new AppError_1.default(http_status_codes_1.default.NOT_FOUND, "User not found");
+    }
+    return updatedUser;
+});
+const updateAgentApprovalStatus = (userId, approvalStatus) => __awaiter(void 0, void 0, void 0, function* () {
+    if (!Object.values(user_interface_1.AgentApprovalStatus).includes(approvalStatus)) {
+        throw new AppError_1.default(http_status_codes_1.default.BAD_REQUEST, "Invalid approval status");
+    }
+    let newRole = user_interface_1.Role.USER;
+    if (approvalStatus === user_interface_1.AgentApprovalStatus.ACCEPTED) {
+        newRole = user_interface_1.Role.AGENT;
+    }
+    const updatedUser = yield user_model_1.User.findByIdAndUpdate(userId, {
+        agentApproval: approvalStatus,
+        role: newRole,
+    }, { new: true });
+    if (!updatedUser) {
+        throw new AppError_1.default(http_status_codes_1.default.NOT_FOUND, "User not found");
+    }
+    return updatedUser;
+});
 exports.UserService = {
     createNewUser,
     getAllUsers,
     getSingleUser,
     updateUser,
-    updateUserRole
+    updateUserRole,
+    updateAccountStatus,
+    updateAgentApprovalStatus
 };

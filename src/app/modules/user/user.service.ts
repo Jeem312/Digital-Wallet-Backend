@@ -1,5 +1,5 @@
 import AppError from "../../../helpers/AppError";
-import {  IUser, Role, AccountStatus } from "./user.interface";
+import {  IUser, Role, AccountStatus, AgentApprovalStatus } from "./user.interface";
 import httpStatus from "http-status-codes";
 import { User } from "./user.model";
 import bcrypt from "bcryptjs";
@@ -109,10 +109,59 @@ const updateUserRole = async (userId: string, newRole: Role) => {
   return updatedUser;
 };
 
+const updateAccountStatus = async (id: string, status: AccountStatus) => {
+  
+  if (!Object.values(AccountStatus).includes(status)) {
+    throw new AppError( httpStatus.BAD_REQUEST,"Invalid account status");
+  }
+
+  const updatedUser = await User.findByIdAndUpdate(
+    id,
+    { status },
+    { new: true }
+  );
+
+  if (!updatedUser) {
+    throw new AppError(httpStatus.NOT_FOUND,"User not found" );
+  }
+
+  return updatedUser;
+};
+const updateAgentApprovalStatus = async (
+  userId: string,
+  approvalStatus: AgentApprovalStatus
+) => {
+  if (!Object.values(AgentApprovalStatus).includes(approvalStatus)) {
+    throw new AppError(httpStatus.BAD_REQUEST, "Invalid approval status");
+  }
+
+  let newRole = Role.USER;
+  if (approvalStatus === AgentApprovalStatus.ACCEPTED) {
+    newRole = Role.AGENT;
+  }
+
+  const updatedUser = await User.findByIdAndUpdate(
+    userId,
+    {
+      agentApproval: approvalStatus,
+      role: newRole,
+    },
+    { new: true }
+  );
+
+  if (!updatedUser) {
+    throw new AppError(httpStatus.NOT_FOUND, "User not found");
+  }
+
+  return updatedUser;
+};
+
 export const UserService = {
     createNewUser,
     getAllUsers,
     getSingleUser,
     updateUser,
-    updateUserRole
+    updateUserRole,
+    updateAccountStatus,
+    updateAgentApprovalStatus
 }

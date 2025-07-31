@@ -21,11 +21,15 @@ router.patch(
   checkAuth("user", "agent", "admin"),  
   userController.updateUser
 );
+router.patch("/status/:id", 
+  userController.updateAccountStatus
+);
 
 router.patch(
   "/role/:id",
   checkAuth("admin"), 
   userController.updateUserRole
 );
+router.patch("/agentApproval", userController.updateAgentApprovalStatus);
 
 export const UserRoutes = router;
