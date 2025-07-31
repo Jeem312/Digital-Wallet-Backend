@@ -8,6 +8,7 @@ router.post("/register", userController.createNewUser);
 router.get(
     "/allUsers",
     checkAuth("admin"),
+   
     userController.getAllUsers
 );
 router.get(

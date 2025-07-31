@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 import { envVars } from "../config/envConfig";
 import bcryptjs from "bcryptjs";
 import { User } from "../app/modules/user/user.model";

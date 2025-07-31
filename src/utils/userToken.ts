@@ -1,3 +1,4 @@
+import { JwtPayload } from "jsonwebtoken";
 import { isActive, IUser } from "../app/modules/user/user.interface";
 import { User } from "../app/modules/user/user.model";
 import { envVars } from "../config/envConfig";
@@ -21,42 +22,46 @@ export const createUserTokens = (user:Partial<IUser>)=>{
         }
 }
 
-export const createNewAccessTokenWithRefreshToken=async(refreshToken:string)=>{
- 
+export const createNewAccessTokenWithRefreshToken = async (refreshToken: string) => {
+  const verifiedToken = verifyToken(refreshToken, envVars.JWT_REFRESH_SECRET);
 
-const verifiedToken = verifyToken(refreshToken,envVars.JWT_REFRESH_SECRET);
+  
+  if (typeof verifiedToken !== 'object' || !('email' in verifiedToken)) {
+    throw new AppError(httpStatus.UNAUTHORIZED, 'Invalid refresh token');
+  }
 
-  const isUserExist = await User.findOne(({email:verifiedToken.email }))
+  const { email } = verifiedToken as JwtPayload;
 
+  const isUserExist = await User.findOne({ email });
 
+  if (!isUserExist) {
+    throw new AppError(httpStatus.BAD_REQUEST, 'User Not Exist');
+  }
 
+  if (
+    isUserExist.isActive === isActive.BLOCKED ||
+    isUserExist.isActive === isActive.INACTIVE
+  ) {
+    throw new AppError(httpStatus.BAD_REQUEST, 'User is Blocked/Inactive');
+  }
 
-      
+  if (isUserExist.isDeleted) {
+    throw new AppError(httpStatus.BAD_REQUEST, 'User deleted');
+  }
 
-    if(!isUserExist){
-        throw new AppError(httpStatus.BAD_REQUEST,'User Not Exist')
-    }
+  const jwtPayload = {
+    userId: isUserExist._id,
+    email: isUserExist.email,
+    role: isUserExist.role,
+  };
 
-    if (isUserExist.isActive === isActive.BLOCKED || isUserExist.isActive === isActive.INACTIVE) {
+  const accessToken = generateToken(
+    jwtPayload,
+    envVars.JWT_ACCESS_SECRET,
+    envVars.JWT_ACCESS_EXPIRES
+  );
 
-                throw new AppError(httpStatus.BAD_REQUEST,'User is Blocked/Inactive')
-    }
-    if (isUserExist.isDeleted) {
-                throw new AppError(httpStatus.BAD_REQUEST,'User deleted')
-        
-    }
-   
-
-       const jwtPayload = {
-            userId: isUserExist._id,
-            email: isUserExist.email,
-            role: isUserExist.role
-        }
-        const accessToken = generateToken(jwtPayload,envVars.JWT_ACCESS_SECRET,envVars.JWT_ACCESS_EXPIRES)
-
-        return{
-            accessToken:accessToken,
-
- }
-
-}
+  return {
+    accessToken,
+  };
+};
