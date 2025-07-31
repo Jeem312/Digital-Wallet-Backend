@@ -9,8 +9,9 @@ router.post("/register", user_controller_1.userController.createNewUser);
 router.get("/", (0, checkAuth_1.checkAuth)("admin"), user_controller_1.userController.getAllUsers);
 router.get("/:id", (0, checkAuth_1.checkAuth)("admin", "user", "agent"), user_controller_1.userController.getSingleUser);
 router.patch("/:id", (0, checkAuth_1.checkAuth)("user", "agent", "admin"), user_controller_1.userController.updateUser);
-router.patch("/status/:id", (0, checkAuth_1.checkAuth)("admin"), user_controller_1.userController.updateAccountStatus);
-router.patch("/role/:id", (0, checkAuth_1.checkAuth)("admin"), user_controller_1.userController.updateUserRole);
-console.log("✅ user route file loaded");
-router.patch("/agentApproval", (0, checkAuth_1.checkAuth)("admin"), user_controller_1.userController.updateAgentApprovalStatus);
+// Fixed: Changed from /status/:id to /:id/status
+router.patch("/:id/status", (0, checkAuth_1.checkAuth)("admin"), user_controller_1.userController.updateAccountStatus);
+router.patch("/:id/role", (0, checkAuth_1.checkAuth)("admin"), user_controller_1.userController.updateUserRole);
+// Fixed: Changed from /agentApproval to /agent-approval (more RESTful)
+router.patch("/agent-approval", (0, checkAuth_1.checkAuth)("admin"), user_controller_1.userController.updateAgentApprovalStatus);
 exports.UserRoutes = router;

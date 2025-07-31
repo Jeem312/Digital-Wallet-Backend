@@ -8,7 +8,6 @@ router.post("/register", userController.createNewUser);
 router.get(
     "/",
     checkAuth("admin"),
-   
     userController.getAllUsers
 );
 router.get(
@@ -21,19 +20,27 @@ router.patch(
   checkAuth("user", "agent", "admin"),  
   userController.updateUser
 );
-router.patch("/status/:id",
+
+// Fixed: Changed from /status/:id to /:id/status
+router.patch(
+  "/:id/status",
   checkAuth("admin"), 
   userController.updateAccountStatus
 );
 
 router.patch(
-  "/role/:id",
+  "/:id/role",
   checkAuth("admin"), 
   userController.updateUserRole
 );
 
-console.log("✅ user route file loaded");
+// Fixed: Changed from /agentApproval to /agent-approval (more RESTful)
+router.patch(
+  "/agent-approval", 
+  checkAuth("admin"), 
+  userController.updateAgentApprovalStatus
+);
 
-router.patch("/agentApproval",checkAuth("admin") ,userController.updateAgentApprovalStatus);
+
 
 export const UserRoutes = router;
