@@ -5,6 +5,13 @@ import { checkAuth } from "../../../middleWares/checkAuth";
 const router = Router();
 
 router.post("/register", userController.createNewUser);
+
+router.patch(
+  "/agent-approval", 
+  checkAuth("admin"), 
+  userController.updateAgentApprovalStatus
+);
+
 router.get(
     "/",
     checkAuth("admin"),
@@ -21,7 +28,6 @@ router.patch(
   userController.updateUser
 );
 
-// Fixed: Changed from /status/:id to /:id/status
 router.patch(
   "/:id/status",
   checkAuth("admin"), 
@@ -34,12 +40,6 @@ router.patch(
   userController.updateUserRole
 );
 
-// Fixed: Changed from /agentApproval to /agent-approval (more RESTful)
-router.patch(
-  "/agent-approval", 
-  checkAuth("admin"), 
-  userController.updateAgentApprovalStatus
-);
 
 
 

@@ -1,193 +1,217 @@
+Here's an improved and more detailed `README.md` for your Digital Wallet API project with better organization and technical clarity:
+
+```markdown
 # 💳 Digital Wallet API
 
-**LIVE_URL:https://digital-wallet-backend.vercel.app/
+**LIVE URL:** [https://digital-wallet-backend.vercel.app/](https://digital-wallet-backend.vercel.app/)
 
-A secure and modular backend API for a **digital wallet system** (similar to bKash or Nagad) built using **Express.js**, **TypeScript**, and **MongoDB (Mongoose)**.  
-This system supports **JWT authentication**, **role-based authorization**, and core financial operations like **add money**, **withdraw**, and **send money**.
+A secure financial transaction system API supporting user wallets, agent operations, and admin management with JWT authentication.
 
----
+## 🌟 Key Features
 
-## 🚀 Features
+### 🔐 Authentication System
+- JWT-based authentication with access/refresh tokens
+- Role-based authorization (Admin, Agent, User)
+- Secure password hashing with bcrypt
 
-- **Authentication & Authorization**
-  - JWT-based login and role management (`admin`, `agent`, `user`).
-  - Secure password hashing using **bcrypt**.
-  - Role-based access control (RBAC) middleware.
+### 💰 Core Financial Operations
+- Wallet creation for all users (initial balance: 50 units)
+- Send money between users
+- Cash-in (Agent adds money to user wallet)
+- Cash-out (Agent withdraws from user wallet)
+- Transaction history tracking
 
-- **Wallet Management**
-  - Automatic wallet creation for all users upon registration.
-  - Wallet balance management with validation (e.g., insufficient funds).
+### 👔 Admin Controls
+- User management (create/update/block users)
+- Agent approval system (Pending → Accepted/Rejected)
+- Wallet blocking functionality
+- Comprehensive transaction monitoring
 
-- **Transactions**
-  - Add money (top-up).
-  - Withdraw money.
-  - Send money to another user.
-  - Transaction history tracking.
+## 🛠 Technical Stack
 
-- **Agent Features**
-  - Cash-in (add money to user wallets).
-  - Cash-out (withdraw money from user wallets).
-  - (Optional) Agent commission tracking.
+| Category       | Technologies                          |
+|----------------|---------------------------------------|
+| Backend        | Node.js, Express, TypeScript         |
+| Database       | MongoDB (Mongoose ODM)               |
+| Authentication | JWT with cookie-based refresh tokens |
+| Security       | Bcrypt, CORS, rate limiting          |
+| Deployment     | Vercel                               |
 
-- **Admin Features**
-  - View all users, agents, wallets, and transactions.
-  - Block/unblock wallets.
-  - Approve/suspend agents.
-  - (Optional) Set system parameters like fees.
+## 📂 Enhanced Project Structure
 
----
-
-## 🛠 Tech Stack
-
-- **Backend:** Node.js, Express.js, TypeScript
-- **Database:** MongoDB (Mongoose)
-- **Authentication:** JWT (Access & Refresh Tokens)
-- **Password Hashing:** bcrypt.js
-- **Environment Variables:** dotenv
-- **Validation & Error Handling:** Custom AppError class and middlewares
-
----
-
-## 📁 Project Structure
-
+```
 src/
 ├── app/
 │   ├── modules/
-│   │   ├── auth/
-│   │   ├── user/
-│   │   ├── wallet/
-│   │   └── transaction/
-├── middlewares/
-│   ├── globalErrorHandler.ts
-│   ├── checkAuth.ts
-│   └── notFound.ts
+│   │   ├── auth/           # Auth routes & controllers
+│   │   ├── user/           # User management
+│   │   ├── wallet/         # Wallet operations
+│   │   └── transaction/    # Transaction records
+│   └── routes/             # Consolidated route definitions
 ├── config/
-│   └── envConfig.ts
-├── helpers/
-│   └── AppError.ts
+│   ├── envConfig.ts        # Environment variables
+│   └── dbConnect.ts       # Database connection
+├── middlewares/
+│   ├── checkAuth.ts        # RBAC middleware
+│   ├── errorHandlers.ts    # Global error management
+│   └── validators/         # Request validation
+├── models/
+│   ├── User.model.ts       # User schema
+│   ├── Wallet.model.ts     # Wallet schema
+│   └── Transaction.model.ts
 ├── utils/
-│   ├── catchAsync.ts
-│   ├── queryBuilder.ts
-│   ├── seedSuperAdmin.ts
-│   ├── userToken.ts
-│   ├── sendResponse.ts
-│   ├── jwt.ts
-│   └── setCookie.ts
-├── server.ts
-└── app.ts
+│   ├── apiFeatures.ts      # Query filtering/pagination
+│   ├── jwt.ts              # Token utilities
+│   └── responseHelpers.ts  # Standardized responses
+└── server.ts               # Entry point
+```
 
----
+## 🚀 API Endpoints
 
-## ⚙️ Setup & Installation
+### Authentication (`/api/v1/auth`)
+| Method | Endpoint       | Description                | Access       |
+|--------|----------------|----------------------------|--------------|
+| POST   | `/login`       | User login                 | Public       |
+| POST   | `/logout`      | Invalidate session         | Authenticated|
 
-1. **Clone the repository**
-   ```bash
-   git clone (https://github.com/Jeem312/Digital-Wallet-Backend)
-   cd digital-wallet-api
-   ```
+### Users (`/api/v1/users`)
+| Method | Endpoint            | Description                     | Access       |
+|--------|---------------------|---------------------------------|--------------|
+| POST   | `/register`         | Create new user                 | Public       |
+| GET    | `/`                 | List all users (paginated)      | Admin        |
+| PATCH  | `/:id/role`         | Update user role                | Admin        |
+| PATCH  | `/:id/status`       | Block/unblock user              | Admin        |
+| PATCH  | `/agent-approval`   | Approve/reject agent applicants | Admin        |
 
-2. **Install dependencies**
-   ```bash
-   npm install
-   ```
+### Wallets (`/api/v1/wallets`)
+| Method | Endpoint          | Description                     | Access         |
+|--------|-------------------|---------------------------------|----------------|
+| POST   | `/sendMoney`      | Transfer to another user        | User, Agent    |
+| POST   | `/cashIn`         | Agent adds money to user wallet | Agent          |
+| POST   | `/cashOut`        | Agent withdraws from wallet     | Agent          |
+| PATCH  | `/:id/block`      | Admin wallet suspension         | Admin          |
 
-3. **Configure environment variables**
-   Create a `.env` file in the root directory:
-   ```env
-   PORT=5000
-   DB_URL=<your-mongodb-url>
-   NODE_ENV=development
+### Transactions (`/api/v1/transactions`)
+| Method | Endpoint             | Description                     | Access         |
+|--------|----------------------|---------------------------------|----------------|
+| GET    | `/`                  | All transactions (admin view)   | Admin          |
+| GET    | `/myHistory`         | User transaction history        | User, Agent    |
+| GET    | `/commission/:id`    | Agent commission records        | Agent          |
 
-   # SUPER ADMIN
-   SUPER_ADMIN_EMAIL=superadmin@example.com
-   SUPER_ADMIN_PASSWORD=superadminpassword
-   SUPER_ADMIN_PHONE=1234567890
+## 🔧 Setup Instructions
 
-   # BCRYPT
-   BCRYPT_SALT_ROUND=10
+1. **Environment Setup**
+```bash
+# Clone repository
+git clone https://github.com/Jeem312/Digital-Wallet-Backend
+cd Digital-Wallet-Backend
 
-   # JWT
-   JWT_ACCESS_SECRET=yourSecret
-   JWT_REFRESH_SECRET=yourRefreshSecret
-   JWT_ACCESS_EXPIRES=1d
-   JWT_REFRESH_SECRET_EXPIRED=7d
-   ```
+# Install dependencies
+npm install
 
-4. **Run the server**
-   ```bash
-   npm run dev
-   ```
+# Configure environment
+cp .env.example .env
+```
 
----
+2. **Environment Variables**
+```env
+# Server
+PORT=5000
+NODE_ENV=development
 
-## 🔐 Authentication & Roles
+# Database
+DB_URL=mongodb://localhost:27017/digital-wallet
 
-- **Admin:** Has full access to all endpoints.
-- **Agent:** Can perform cash-in/cash-out operations.
-- **User:** Can add money, withdraw, send money, and view history.
+# Admin Credentials
+SUPER_ADMIN_EMAIL=admin@wallet.com
+SUPER_ADMIN_PASSWORD=securepassword
+SUPER_ADMIN_PHONE=+8801XXXXXXXXX
 
----
+# Security
+JWT_SECRET=your_jwt_secret
+BCRYPT_SALT_ROUNDS=12
+```
 
-## 📜 API Endpoints
+3. **Running the Application**
+```bash
+# Development mode
+npm run dev
 
-### **Auth Routes**
-| Method | Endpoint        | Description              |
-|--------|-----------------|--------------------------|
-| POST   | `/api/v1/auth/login`  | Login and receive tokens |
-| POST   | `/api/v1/auth/logout` | Logout user            |
+# Production build
+npm run build && npm start
 
-### **User Routes**
-| Method | Endpoint               | Description         |
-|--------|------------------------|---------------------|
-| GET    | `/api/v1/users/me`     | Get user profile    |
-| POST   | `/api/v1/users`        | Create new user     |
+# Run tests
+npm test
+```
 
-### **Wallet Routes**
-| Method | Endpoint                | Description         |
-|--------|-------------------------|---------------------|
-| POST   | `/api/v1/wallets/deposit`  | Add money          |
-| POST   | `/api/v1/wallets/withdraw` | Withdraw money     |
-| POST   | `/api/v1/wallets/transfer` | Send money         |
-| GET    | `/api/v1/wallets/history`  | Get transaction history |
+## 🛡️ Security Features
 
----
+- **Role Validation Middleware**
+```typescript
+// Example: Agent-only endpoint
+router.post('/cashIn', checkAuth('agent'), walletController.cashIn);
+```
 
-## 🧪 API Testing
+- **Transaction Validation**
+```typescript
+// Prevents negative balances
+if (userWallet.balance < amount) {
+  throw new AppError(400, "Insufficient funds");
+}
+```
 
-Use **Postman** or any API client:
+- **Rate Limiting**
+```typescript
+import rateLimit from 'express-rate-limit';
 
-1. Import your API endpoints.
-2. Login using:
-   ```json
-   {
-     "email": "superadmin@example.com",
-     "password": "superadminpassword"
-   }
-   ```
-3. Use the returned **accessToken** for subsequent requests (set in Authorization header as `Bearer <token>`).
+const authLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  max: 20 // Limit each IP to 20 requests per window
+});
 
----
+app.use('/api/v1/auth/login', authLimiter);
+```
 
-## 📝 Scripts
+## 📊 Sample API Request
 
-- **Start server:**  
-  `npm start`
+**Agent Approval:**
+```http
+PATCH /api/v1/users/agent-approval?id=USER_ID&status=accepted
+Headers: { Authorization: Bearer <admin_token> }
+```
 
-- **Run in dev mode (with nodemon):**  
-  `npm run dev`
+**Successful Response:**
+```json
+{
+  "success": true,
+  "message": "Agent accepted",
+  "data": {
+    "id": "USER_ID",
+    "role": "agent",
+    "status": "active"
+  }
+}
+```
 
-- **Build (TypeScript → JS):**  
-  `npm run build`
+## 🐛 Troubleshooting
 
----
+**Common Issues:**
+1. **Routes not working in production**
+   - Ensure all TypeScript files are compiled to JS in `dist/`
+   - Verify Vercel deployment is using Node.js runtime
+
+2. **Authentication failures**
+   - Check JWT token expiration
+   - Verify `Authorization` header format: `Bearer <token>`
+
+3. **Database connection issues**
+   - Confirm MongoDB URI in `.env`
+   - Check network access if using cloud database
 
 
 
-
-
-## 👨‍💻 Author
-
+## 👩‍💻 Author
 **Sanjida Jahan Jeem**  
+[GitHub](https://github.com/Jeem312) 
+```
 
-
----

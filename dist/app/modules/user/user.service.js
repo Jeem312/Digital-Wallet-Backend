@@ -73,7 +73,7 @@ const getSingleUser = (userId) => __awaiter(void 0, void 0, void 0, function* ()
     return user;
 });
 const updateUser = (userId, updateData) => __awaiter(void 0, void 0, void 0, function* () {
-    if ("role" in updateData) {
+    if (updateData && "role" in updateData) {
         delete updateData.role;
     }
     const updatedUser = yield user_model_1.User.findByIdAndUpdate(userId, updateData, {
@@ -96,10 +96,14 @@ const updateUserRole = (userId, newRole) => __awaiter(void 0, void 0, void 0, fu
     return updatedUser;
 });
 const updateAccountStatus = (id, status) => __awaiter(void 0, void 0, void 0, function* () {
-    if (!Object.values(user_interface_1.isActive).includes(status)) {
+    if (!status || typeof status !== 'string') {
+        throw new AppError_1.default(http_status_codes_1.default.BAD_REQUEST, "Status is required and must be a string");
+    }
+    const normalizedStatus = status.trim().toLowerCase();
+    if (!Object.values(user_interface_1.isActive).includes(normalizedStatus)) {
         throw new AppError_1.default(http_status_codes_1.default.BAD_REQUEST, "Invalid account status");
     }
-    const updatedUser = yield user_model_1.User.findByIdAndUpdate(id, { status }, { new: true });
+    const updatedUser = yield user_model_1.User.findByIdAndUpdate(id, { status: normalizedStatus }, { new: true });
     if (!updatedUser) {
         throw new AppError_1.default(http_status_codes_1.default.NOT_FOUND, "User not found");
     }

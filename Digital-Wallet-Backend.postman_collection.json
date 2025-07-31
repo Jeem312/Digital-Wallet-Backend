@@ -1,0 +1,190 @@
+{
+	"info": {
+		"_postman_id": "b7a6d506-2393-4263-91dd-49c7d5758542",
+		"name": "Digital-Wallet-Backend",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "46718121"
+	},
+	"item": [
+		{
+			"name": "register",
+			"request": {
+				"method": "GET",
+				"header": []
+			},
+			"response": []
+		},
+		{
+			"name": "login",
+			"request": {
+				"method": "GET",
+				"header": []
+			},
+			"response": []
+		},
+		{
+			"name": "wallet",
+			"request": {
+				"method": "GET",
+				"header": []
+			},
+			"response": []
+		},
+		{
+			"name": "walletById",
+			"request": {
+				"method": "GET",
+				"header": []
+			},
+			"response": []
+		},
+		{
+			"name": "block-wallet",
+			"request": {
+				"method": "PATCH",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2ODg4ZTZhZTk4NzdlMDYyODBkOTQ3OTUiLCJlbWFpbCI6ImFnZW50LnJhQGV4YW1wbGUuY29tIiwicm9sZSI6ImFnZW50IiwiaWF0IjoxNzUzODA0MTc4LCJleHAiOjE3NTM4MDUwNzh9.bCMxp3Fg5yJconDXDUuwElqk6Ku4bR2KI8EeY4bXMHY",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"amount\": 500\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:5000/api/v1/wallet/68889a388793b4856041c0be/balance",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5000",
+					"path": [
+						"api",
+						"v1",
+						"wallet",
+						"68889a388793b4856041c0be",
+						"balance"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "cashIn/cashOut",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2ODg4OWRmN2Q0NjMxYjM1YTc5YmYzZTAiLCJlbWFpbCI6InN1cGVyYWRtaW5AZXhhbXBsZS5jb20iLCJyb2xlIjoiYWRtaW4iLCJpYXQiOjE3NTM4MDcxMzcsImV4cCI6MTc1NDU4NDczN30.WSZdECa4IygMWqVD-zmXV-N3hoTNnqUFF3LMMW4KVH0",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "http://localhost:5000/api/v1/user/allUsers?role=agent",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5000",
+					"path": [
+						"api",
+						"v1",
+						"user",
+						"allUsers"
+					],
+					"query": [
+						{
+							"key": "role",
+							"value": "agent"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "sendMoney",
+			"request": {
+				"method": "GET",
+				"header": []
+			},
+			"response": []
+		},
+		{
+			"name": "update",
+			"request": {
+				"method": "GET",
+				"header": []
+			},
+			"response": []
+		},
+		{
+			"name": "New Request",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://digital-wallet-backend-gquz9fekf-jeems-projects.vercel.app/",
+					"protocol": "https",
+					"host": [
+						"digital-wallet-backend-gquz9fekf-jeems-projects",
+						"vercel",
+						"app"
+					],
+					"path": [
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Transactions",
+			"request": {
+				"method": "GET",
+				"header": []
+			},
+			"response": []
+		},
+		{
+			"name": "commission",
+			"request": {
+				"method": "GET",
+				"header": []
+			},
+			"response": []
+		},
+		{
+			"name": "all-user",
+			"request": {
+				"method": "GET",
+				"header": []
+			},
+			"response": []
+		},
+		{
+			"name": "agent-Approval",
+			"request": {
+				"method": "GET",
+				"header": []
+			},
+			"response": []
+		},
+		{
+			"name": "Account-status",
+			"request": {
+				"method": "GET",
+				"header": []
+			},
+			"response": []
+		}
+	]
+}
