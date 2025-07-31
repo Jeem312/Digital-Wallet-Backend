@@ -76,7 +76,7 @@ const cashIn = (userId, agentId, amount) => __awaiter(void 0, void 0, void 0, fu
         yield transaction_model_1.Transaction.create([{
                 type: tansaction_interface_1.TransactionType.CASH_IN,
                 amount,
-                charge,
+                charge: 0,
                 user: userId,
                 agent: agentId,
                 userWalletBalance: userWallet.balance,

@@ -21,7 +21,8 @@ router.patch(
   checkAuth("user", "agent", "admin"),  
   userController.updateUser
 );
-router.patch("/status/:id", 
+router.patch("/status/:id",
+  checkAuth("admin"), 
   userController.updateAccountStatus
 );
 
@@ -30,6 +31,9 @@ router.patch(
   checkAuth("admin"), 
   userController.updateUserRole
 );
-router.patch("/agentApproval", userController.updateAgentApprovalStatus);
+
+console.log("✅ user route file loaded");
+
+router.patch("/agentApproval",checkAuth("admin") ,userController.updateAgentApprovalStatus);
 
 export const UserRoutes = router;

@@ -24,14 +24,14 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.UserService = void 0;
-const AppError_1 = __importDefault(require("../../../../dist/helpers/AppError"));
+const AppError_1 = __importDefault(require("../../../helpers/AppError"));
 const user_interface_1 = require("./user.interface");
 const http_status_codes_1 = __importDefault(require("http-status-codes"));
 const user_model_1 = require("./user.model");
 const bcryptjs_1 = __importDefault(require("bcryptjs"));
-const envConfig_1 = require("../../../../dist/config/envConfig");
-const wallet_model_1 = require("../../../../dist/app/modules/wallet/wallet.model");
-const QueryBuilder_1 = require("../../../../dist/utils/QueryBuilder");
+const envConfig_1 = require("../../../config/envConfig");
+const wallet_model_1 = require("../wallet/wallet.model");
+const QueryBuilder_1 = require("../../../utils/QueryBuilder");
 const createNewUser = (payload) => __awaiter(void 0, void 0, void 0, function* () {
     const { email, password } = payload, rest = __rest(payload, ["email", "password"]);
     const isUserExists = yield user_model_1.User.findOne({
@@ -41,7 +41,7 @@ const createNewUser = (payload) => __awaiter(void 0, void 0, void 0, function* (
         throw new AppError_1.default(http_status_codes_1.default.BAD_REQUEST, 'User Already Exist');
     }
     const passwordHash = yield bcryptjs_1.default.hash(password, envConfig_1.envVars.BCRYPT_SALT_ROUND);
-    const userData = Object.assign(Object.assign({}, rest), { email, password: passwordHash, role: payload.role || user_interface_1.Role.USER, status: user_interface_1.AccountStatus.ACTIVE, isVerified: false, isDeleted: false });
+    const userData = Object.assign(Object.assign({}, rest), { email, password: passwordHash, role: payload.role || user_interface_1.Role.USER, status: user_interface_1.isActive.ACTIVE, isVerified: false, isDeleted: false });
     if (payload.role === user_interface_1.Role.AGENT) {
         userData.role = user_interface_1.Role.PENDING;
     }
@@ -96,7 +96,7 @@ const updateUserRole = (userId, newRole) => __awaiter(void 0, void 0, void 0, fu
     return updatedUser;
 });
 const updateAccountStatus = (id, status) => __awaiter(void 0, void 0, void 0, function* () {
-    if (!Object.values(user_interface_1.AccountStatus).includes(status)) {
+    if (!Object.values(user_interface_1.isActive).includes(status)) {
         throw new AppError_1.default(http_status_codes_1.default.BAD_REQUEST, "Invalid account status");
     }
     const updatedUser = yield user_model_1.User.findByIdAndUpdate(id, { status }, { new: true });

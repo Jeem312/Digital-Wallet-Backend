@@ -1,6 +1,7 @@
 "use strict";
+// src/app/modules/user/user.interface.ts
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.AgentApprovalStatus = exports.isActive = exports.AccountStatus = exports.Role = void 0;
+exports.AgentApprovalStatus = exports.isActive = exports.Role = void 0;
 var Role;
 (function (Role) {
     Role["USER"] = "user";
@@ -8,11 +9,6 @@ var Role;
     Role["ADMIN"] = "admin";
     Role["PENDING"] = "pending";
 })(Role || (exports.Role = Role = {}));
-var AccountStatus;
-(function (AccountStatus) {
-    AccountStatus["ACTIVE"] = "active";
-    AccountStatus["BLOCKED"] = "blocked";
-})(AccountStatus || (exports.AccountStatus = AccountStatus = {}));
 var isActive;
 (function (isActive) {
     isActive["ACTIVE"] = "active";
@@ -21,6 +17,7 @@ var isActive;
 })(isActive || (exports.isActive = isActive = {}));
 var AgentApprovalStatus;
 (function (AgentApprovalStatus) {
+    AgentApprovalStatus["PENDING"] = "pending";
     AgentApprovalStatus["ACCEPTED"] = "accepted";
     AgentApprovalStatus["REJECTED"] = "rejected";
 })(AgentApprovalStatus || (exports.AgentApprovalStatus = AgentApprovalStatus = {}));

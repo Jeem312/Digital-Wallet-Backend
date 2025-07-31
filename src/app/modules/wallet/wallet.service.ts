@@ -79,7 +79,7 @@ const cashIn = async (userId: string, agentId: string, amount: number) => {
         await Transaction.create([{
             type: TransactionType.CASH_IN,
             amount,
-            charge,
+            charge:0,
             user: userId,
             agent: agentId,
             userWalletBalance: userWallet.balance,

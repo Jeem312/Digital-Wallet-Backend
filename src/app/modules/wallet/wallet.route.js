@@ -5,7 +5,7 @@ const express_1 = require("express");
 const wallet_controller_1 = require("./wallet.controller");
 const checkAuth_1 = require("../../../middleWares/checkAuth");
 const router = (0, express_1.Router)();
-router.get('/', (0, checkAuth_1.checkAuth)('ADMIN'), wallet_controller_1.walletController.getAllWallets);
+router.get('/', (0, checkAuth_1.checkAuth)('admin'), wallet_controller_1.walletController.getAllWallets);
 router.post("/sendMoney", (0, checkAuth_1.checkAuth)("user", "agent", "admin"), wallet_controller_1.walletController.sendMoney);
 router.post("/cashIn", (0, checkAuth_1.checkAuth)("agent"), wallet_controller_1.walletController.cashIn);
 router.post("/cashOut", (0, checkAuth_1.checkAuth)("agent"), wallet_controller_1.walletController.cashOut);

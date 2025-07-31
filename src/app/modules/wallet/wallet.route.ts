@@ -5,7 +5,7 @@ import { checkAuth } from '../../../middleWares/checkAuth';
 const router = Router();
 
 router.get('/', 
-    checkAuth('ADMIN'), 
+    checkAuth('admin'), 
     walletController.getAllWallets);
 
 

@@ -11,7 +11,7 @@ const userSchema = new mongoose_1.Schema({
     address: { type: String },
     picture: { type: String },
     role: { type: String, enum: Object.values(user_interface_1.Role), default: user_interface_1.Role.USER },
-    status: { type: String, enum: Object.values(user_interface_1.AccountStatus), default: user_interface_1.AccountStatus.ACTIVE },
+    status: { type: String, enum: Object.values(user_interface_1.isActive), default: user_interface_1.isActive.ACTIVE },
     isVerified: { type: Boolean, default: false },
     isDeleted: { type: Boolean, default: false },
     wallet: { type: mongoose_1.Schema.Types.ObjectId, ref: "Wallet" },

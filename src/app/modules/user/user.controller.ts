@@ -3,7 +3,7 @@ import { catchAsync } from "../../../utils/catchAsync";
 import { SendResponse } from "../../../utils/sendResponse";
 import { UserService } from "./user.service";
 import httpStatus from "http-status-codes";
-import { AccountStatus, AgentApprovalStatus } from "./user.interface";
+import { isActive, AgentApprovalStatus } from "./user.interface";
 import AppError from "../../../helpers/AppError";
 
 const createNewUser = catchAsync(async (req,res)=>{
@@ -79,7 +79,7 @@ const updateAccountStatus = catchAsync(async (req: Request, res: Response) => {
 
   const updatedUser = await UserService.updateAccountStatus(
     id,
-    status as AccountStatus
+    status as isActive
   );
 
   SendResponse(res, {

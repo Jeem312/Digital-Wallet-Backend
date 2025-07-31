@@ -13,12 +13,12 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.userController = void 0;
-const catchAsync_1 = require("../../../../dist/utils/catchAsync");
-const sendResponse_1 = require("../../../../dist/utils/sendResponse");
+const catchAsync_1 = require("../../../utils/catchAsync");
+const sendResponse_1 = require("../../../utils/sendResponse");
 const user_service_1 = require("./user.service");
 const http_status_codes_1 = __importDefault(require("http-status-codes"));
 const user_interface_1 = require("./user.interface");
-const AppError_1 = __importDefault(require("../../../../dist/helpers/AppError"));
+const AppError_1 = __importDefault(require("../../../helpers/AppError"));
 const createNewUser = (0, catchAsync_1.catchAsync)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const user = yield user_service_1.UserService.createNewUser(req.body);
     (0, sendResponse_1.SendResponse)(res, {

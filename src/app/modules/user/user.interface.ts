@@ -1,16 +1,14 @@
+// src/app/modules/user/user.interface.ts
+
 import { Types } from "mongoose";
 
 export enum Role {
   USER = "user",
   AGENT = "agent",
   ADMIN = "admin",
-  PENDING = "pending", 
+  PENDING = "pending",
 }
 
-export enum AccountStatus {
-  ACTIVE = "active",
-  BLOCKED = "blocked",
-}
 export enum isActive {
   ACTIVE = "active",
   INACTIVE = "inactive",
@@ -18,25 +16,26 @@ export enum isActive {
 }
 
 export enum AgentApprovalStatus {
+  PENDING = "pending",
   ACCEPTED = "accepted",
   REJECTED = "rejected",
 }
 
 export interface IUser {
-  _id?: Types.ObjectId;
+  _id?: string;
   name: string;
   email: string;
   password: string;
-  phone: string;
-  address?: string;
-  picture?: string;
+    picture?: string; 
+  phone?: string;
+  address?: string; 
   role: Role;
-  status: AccountStatus;
-  isActive: isActive;
-  isVerified: boolean;
-  isDeleted: boolean;
- 
-  wallet?: Types.ObjectId; 
+  isActive?: string;
+  status: isActive;
+  isVerified?: boolean;
+  isDeleted?: boolean;
+  agentApproval?: AgentApprovalStatus;
+   wallet?: string | Types.ObjectId;
   createdAt?: Date;
   updatedAt?: Date;
 }

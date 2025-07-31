@@ -41,7 +41,7 @@ const createNewUser = (payload) => __awaiter(void 0, void 0, void 0, function* (
         throw new AppError_1.default(http_status_codes_1.default.BAD_REQUEST, 'User Already Exist');
     }
     const passwordHash = yield bcryptjs_1.default.hash(password, envConfig_1.envVars.BCRYPT_SALT_ROUND);
-    const userData = Object.assign(Object.assign({}, rest), { email, password: passwordHash, role: payload.role || user_interface_1.Role.USER, status: user_interface_1.AccountStatus.ACTIVE, isVerified: false, isDeleted: false });
+    const userData = Object.assign(Object.assign({}, rest), { email, password: passwordHash, role: payload.role || user_interface_1.Role.USER, status: user_interface_1.isActive.ACTIVE, isVerified: false, isDeleted: false });
     if (payload.role === user_interface_1.Role.AGENT) {
         userData.role = user_interface_1.Role.PENDING;
     }
@@ -96,7 +96,7 @@ const updateUserRole = (userId, newRole) => __awaiter(void 0, void 0, void 0, fu
     return updatedUser;
 });
 const updateAccountStatus = (id, status) => __awaiter(void 0, void 0, void 0, function* () {
-    if (!Object.values(user_interface_1.AccountStatus).includes(status)) {
+    if (!Object.values(user_interface_1.isActive).includes(status)) {
         throw new AppError_1.default(http_status_codes_1.default.BAD_REQUEST, "Invalid account status");
     }
     const updatedUser = yield user_model_1.User.findByIdAndUpdate(id, { status }, { new: true });

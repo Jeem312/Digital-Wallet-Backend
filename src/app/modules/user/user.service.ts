@@ -1,5 +1,5 @@
 import AppError from "../../../helpers/AppError";
-import {  IUser, Role, AccountStatus, AgentApprovalStatus } from "./user.interface";
+import {  IUser, Role, isActive, AgentApprovalStatus } from "./user.interface";
 import httpStatus from "http-status-codes";
 import { User } from "./user.model";
 import bcrypt from "bcryptjs";
@@ -26,7 +26,7 @@ const {email , password , ...rest} = payload;
         email,
         password: passwordHash,
         role: payload.role || Role.USER, 
-        status: AccountStatus.ACTIVE,
+        status: isActive.ACTIVE,
         isVerified: false,
         isDeleted: false,
     };
@@ -109,9 +109,9 @@ const updateUserRole = async (userId: string, newRole: Role) => {
   return updatedUser;
 };
 
-const updateAccountStatus = async (id: string, status: AccountStatus) => {
+const updateAccountStatus = async (id: string, status: isActive) => {
   
-  if (!Object.values(AccountStatus).includes(status)) {
+  if (!Object.values(isActive).includes(status)) {
     throw new AppError( httpStatus.BAD_REQUEST,"Invalid account status");
   }
 
