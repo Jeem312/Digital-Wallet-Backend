@@ -15,18 +15,21 @@ import httpStatus from "http-status-codes"
   });
 });
 
-// const getTransactionById = catchAsync(async (req:Request, res:Response) => {
-//   const { id } = req.params;
-//   const result = await transactioService.getTransactionById(id);
+ const getTransactionById = catchAsync(async (req: Request, res: Response) => {
+    const { role, id } = req.query;
+
  
-//   SendResponse(res, {
-//     statusCode: httpStatus.OK,
-//     success: true,
-//     message: "All Transaction get successfully",
-    
-//   });
-// });
+
+    const transactions = await transactionService.getTransactionsByRole(role as string, id as string);
+
+    res.status(httpStatus.OK).json({
+      success: true,
+      message: "Transactions fetched successfully",
+      data: transactions,
+    });
+  }),
+
 export const transactionController = {
     getAllTransactions,
-    // getTransactionById,
+    getTransactionById,
 }
