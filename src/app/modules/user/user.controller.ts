@@ -18,14 +18,16 @@ const createNewUser = catchAsync(async (req,res)=>{
     })
 })
 
-const getAllUsers = catchAsync(async (req, res) => {
-  
-  const users = await UserService.getAllUsers();
-  SendResponse(res, {
+
+const getAllUsers = catchAsync(async (req: Request, res: Response) => {
+  const { data, meta } = await UserService.getAllUsers(req.query as  Record<string, string>);
+
+ SendResponse(res, {
     statusCode: 200,
     success: true,
     message: "Users fetched successfully",
-    data: users,
+    data,
+    meta
   });
 });
 

@@ -27,12 +27,13 @@ const createNewUser = (0, catchAsync_1.catchAsync)((req, res) => __awaiter(void 
     });
 }));
 const getAllUsers = (0, catchAsync_1.catchAsync)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const users = yield user_service_1.UserService.getAllUsers();
+    const { data, meta } = yield user_service_1.UserService.getAllUsers(req.query);
     (0, sendResponse_1.SendResponse)(res, {
         statusCode: 200,
         success: true,
         message: "Users fetched successfully",
-        data: users,
+        data,
+        meta
     });
 }));
 const getSingleUser = (0, catchAsync_1.catchAsync)((req, res) => __awaiter(void 0, void 0, void 0, function* () {

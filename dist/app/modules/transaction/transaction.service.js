@@ -24,15 +24,38 @@ const getAllTransactions = (query) => __awaiter(void 0, void 0, void 0, function
     const meta = yield queryBuilder.getMeta();
     return { data, meta };
 });
-//  const getTransactionById= async (id: string) => {
-//     const transaction = await Transaction.findById(id).populate([
-//       { path: "user", select: "name email" },
-//       { path: "agent", select: "name email" },
-//       { path: "receiver", select: "name email" },
-//     ]);
-//     return transaction;
-//   }
+const getTransactionById = (role, id) => __awaiter(void 0, void 0, void 0, function* () {
+    let filter = {};
+    if (role === "user") {
+        filter = { user: id };
+    }
+    else if (role === "agent") {
+        filter = { agent: id };
+    }
+    else {
+        throw new Error("Invalid role");
+    }
+    const transactions = yield transaction_model_1.Transaction.find(filter)
+        .populate([
+        { path: "user", select: "name email" },
+        { path: "agent", select: "name email" },
+        { path: "receiver", select: "name email" },
+    ])
+        .sort({ createdAt: -1 });
+    return transactions;
+});
+const getAgentCommissionHistory = (agentId) => __awaiter(void 0, void 0, void 0, function* () {
+    const transactions = yield transaction_model_1.Transaction.find({ agent: agentId, status: "success" })
+        .select("charge type createdAt")
+        .sort({ createdAt: -1 });
+    const totalCommission = transactions.reduce((sum, txn) => sum + (txn.charge || 0), 0);
+    return {
+        totalCommission,
+        transactions,
+    };
+});
 exports.transactioService = {
     getAllTransactions,
-    // getTransactionById,
+    getTransactionById,
+    getAgentCommissionHistory
 };

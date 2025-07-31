@@ -39,9 +39,23 @@ import { Transaction } from "./transaction.model";
     return transactions;
   }
 
+  const getAgentCommissionHistory = async (agentId: string) => {
+  const transactions = await Transaction.find({ agent: agentId, status: "success" })
+    .select("charge type createdAt")
+    .sort({ createdAt: -1 });
+
+  const totalCommission = transactions.reduce((sum, txn) => sum + (txn.charge || 0), 0);
+
+  return {
+    totalCommission,
+    transactions,
+  };
+};
   export const transactioService = {
     getAllTransactions,
     getTransactionById,
+    getAgentCommissionHistory
+    
     
   }
 

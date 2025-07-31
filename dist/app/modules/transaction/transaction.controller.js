@@ -27,16 +27,27 @@ const getAllTransactions = (0, catchAsync_1.catchAsync)((req, res) => __awaiter(
         meta
     });
 }));
-// const getTransactionById = catchAsync(async (req:Request, res:Response) => {
-//   const { id } = req.params;
-//   const result = await transactioService.getTransactionById(id);
-//   SendResponse(res, {
-//     statusCode: httpStatus.OK,
-//     success: true,
-//     message: "All Transaction get successfully",
-//   });
-// });
+const getTransactionById = (0, catchAsync_1.catchAsync)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const { role, id } = req.query;
+    const transactions = yield transaction_service_1.transactioService.getTransactionById(role, id);
+    res.status(http_status_codes_1.default.OK).json({
+        success: true,
+        message: "Transactions fetched successfully",
+        data: transactions,
+    });
+}));
+const getAgentCommissionHistory = (0, catchAsync_1.catchAsync)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const agentId = req.params.id;
+    const result = yield transaction_service_1.transactioService.getAgentCommissionHistory(agentId);
+    (0, sendResponse_1.SendResponse)(res, {
+        statusCode: 200,
+        success: true,
+        message: "Agent commission history retrieved successfully",
+        data: result,
+    });
+}));
 exports.transactionController = {
     getAllTransactions,
-    // getTransactionById,
+    getTransactionById,
+    getAgentCommissionHistory
 };

@@ -31,6 +31,7 @@ const user_model_1 = require("./user.model");
 const bcryptjs_1 = __importDefault(require("bcryptjs"));
 const envConfig_1 = require("../../../config/envConfig");
 const wallet_model_1 = require("../wallet/wallet.model");
+const QueryBuilder_1 = require("../../../utils/QueryBuilder");
 const createNewUser = (payload) => __awaiter(void 0, void 0, void 0, function* () {
     const { email, password } = payload, rest = __rest(payload, ["email", "password"]);
     const isUserExists = yield user_model_1.User.findOne({
@@ -54,9 +55,15 @@ const createNewUser = (payload) => __awaiter(void 0, void 0, void 0, function* (
     yield user.save();
     return user;
 });
-const getAllUsers = () => __awaiter(void 0, void 0, void 0, function* () {
-    const users = yield user_model_1.User.find();
-    return users;
+const getAllUsers = (query) => __awaiter(void 0, void 0, void 0, function* () {
+    const queryBuilder = new QueryBuilder_1.QueryBuilder(user_model_1.User.find(), query)
+        .filter()
+        .search(["email", "name"])
+        .sort()
+        .paginate();
+    const data = yield queryBuilder.build();
+    const meta = yield queryBuilder.getMeta();
+    return { data, meta };
 });
 const getSingleUser = (userId) => __awaiter(void 0, void 0, void 0, function* () {
     const user = yield user_model_1.User.findById(userId);

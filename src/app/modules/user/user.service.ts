@@ -5,6 +5,7 @@ import { User } from "./user.model";
 import bcrypt from "bcryptjs";
 import { envVars } from "../../../config/envConfig";
 import { Wallet } from "../wallet/wallet.model";
+import { QueryBuilder } from "../../../utils/QueryBuilder";
 
 const createNewUser = async (payload: Partial<IUser> )=>{
 
@@ -48,9 +49,17 @@ const {email , password , ...rest} = payload;
     return user;
 }
 
-const getAllUsers = async () => {
-  const users = await User.find();
-  return users;
+const getAllUsers = async (query: Record<string, string>) => {
+  const queryBuilder = new QueryBuilder(User.find(), query)
+    .filter()
+    .search(["email", "name"]) 
+    .sort()
+    .paginate();
+
+  const data = await queryBuilder.build();
+  const meta = await queryBuilder.getMeta();
+
+  return { data, meta };
 };
 
 
