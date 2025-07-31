@@ -2,6 +2,7 @@ import { Router } from "express"
 import { UserRoutes } from "../modules/user/user.route"
 import { AuthRoutes } from "../modules/auth/auth.route"
 import { WalletRoutes } from "../modules/wallet/wallet.route"
+import { TransactionRoutes } from "../modules/transaction/transaction.router"
 
 
 
@@ -20,8 +21,13 @@ const moduleRoutes = [
         path: "/wallet",
         route: WalletRoutes 
     },
+   {
+    path:"/transaction",
+    route: TransactionRoutes
+   },
  
 ]
+
 
 moduleRoutes.forEach((route) => {
     router.use(route.path, route.route)

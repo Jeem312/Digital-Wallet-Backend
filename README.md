@@ -1,5 +1,7 @@
 # 💳 Digital Wallet API
 
+**LIVE_URL:https://digital-wallet-backend.vercel.app/
+
 A secure and modular backend API for a **digital wallet system** (similar to bKash or Nagad) built using **Express.js**, **TypeScript**, and **MongoDB (Mongoose)**.  
 This system supports **JWT authentication**, **role-based authorization**, and core financial operations like **add money**, **withdraw**, and **send money**.
 

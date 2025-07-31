@@ -17,22 +17,20 @@ class QueryBuilder {
     }
     filter() {
         const filter = Object.assign({}, this.query);
-        const filterableFields = ["role", "searchTerm", "sort", "fields", "page", "limit"];
-        for (const field of filterableFields) {
-            delete filter[field];
-        }
+        const excludedFields = ["searchTerm", "sort", "fields", "page", "limit"];
+        excludedFields.forEach(field => delete filter[field]);
+        this.modelQuery = this.modelQuery.find(filter);
         return this;
     }
     search(searchAbleFields) {
-        const searchTerm = this.query.searchTerm || "";
-        const searchQuery = {
-            $or: [
-                { title: { $regex: searchTerm, $options: 'i' } },
-                { description: { $regex: searchTerm, $options: 'i' } },
-                { location: { $regex: searchTerm, $options: 'i' } }
-            ]
-        };
-        this.modelQuery = this.modelQuery.find(searchQuery);
+        const searchTerm = this.query.searchTerm;
+        if (searchTerm) {
+            this.modelQuery = this.modelQuery.find({
+                $or: searchAbleFields.map(field => ({
+                    [field]: { $regex: searchTerm, $options: "i" },
+                })),
+            });
+        }
         return this;
     }
     sort() {
@@ -66,7 +64,7 @@ class QueryBuilder {
                 total: totalDocuments,
                 page,
                 limit,
-                totalPages
+                totalPages,
             };
         });
     }
